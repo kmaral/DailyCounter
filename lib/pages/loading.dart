@@ -17,14 +17,14 @@ class _LoadingState extends State<Loading> {
     await Future.delayed(Duration(seconds: 3));
     Navigator.pushNamed(context, '/home');
   }
+
   @override
   Widget build(BuildContext context) {
-
     return
       Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title: Text('My Counters'),
+          title: Text('Daily Counters'),
           centerTitle: true,
           backgroundColor: Colors.blueAccent[200],
           elevation: 0.0,

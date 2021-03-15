@@ -20,9 +20,7 @@ class _HomeState extends State<Home> {
   }
 
   _loadCounter() async {
-    //counters =  prefs.getStringList("Test").cast<counterInfo>();
     final prefs = await SharedPreferences.getInstance();
-    //await prefs.clear();
     setState(() {
       for (String key in prefs.getKeys()) {
         var map = json.decode(prefs.get(key));
@@ -39,13 +37,12 @@ class _HomeState extends State<Home> {
   _removeCounter(int index, counterInfo counter) async
   {
     final prefs = await SharedPreferences.getInstance();
-    //await prefs.clear();
     counters.removeAt(index);
     prefs.remove(counter.counterName);
   }
 
   saveCounters(BuildContext context) async{
-  final result = await Navigator.push(
+  await Navigator.push(
     context,
     MaterialPageRoute(
         builder: (context) => Save()),
@@ -59,19 +56,17 @@ class _HomeState extends State<Home> {
         title: new Text('Are you sure?'),
         content: new Text('Do you want to exit an App'),
         actions: <Widget>[
-          new GestureDetector(
-            onTap: () => Navigator.of(context).pop(false),
-            child: Text("NO"),
-          ),
+          new ElevatedButton(
+              child: Text("NO"),
+              onPressed: (){Navigator.of(context).pop(false);}),
           SizedBox(height: 16),
-          new GestureDetector(
-            onTap: () { Navigator.of(context).pop(false);
-            Future.delayed(const Duration(milliseconds: 1), () {
-              SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-            });
-            },
-            child: Text("YES"),
-          ),
+          new ElevatedButton(
+              child: Text("YES"),
+              onPressed: (){Navigator.of(context).pop(false);
+              Future.delayed(const Duration(milliseconds: 1), () {
+                SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+              });
+              }),
         ],
       ),
     ) ??
@@ -95,7 +90,7 @@ class _HomeState extends State<Home> {
       child: Center(
         child: Scaffold(
           backgroundColor: Colors.white,
-            appBar: AppBar(title: Text('My Counter Lists'),
+            appBar: AppBar(title: Text('Daily Counter List'),
               centerTitle: true,
               automaticallyImplyLeading: false,
             ),
@@ -119,8 +114,6 @@ class _HomeState extends State<Home> {
                       child: InkWell(
                         splashColor: Colors.blue.withAlpha(30),
                         onTap: () async {
-                          //print('Card tapped.');
-                          // start the SecondScreen and wait for it to finish with a result
                           final result = await Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -129,7 +122,6 @@ class _HomeState extends State<Home> {
                           setState(() {
                             counters[index].updatedDate = result["startdate"];
                             counters[index].count = result["countNumber"];
-                           // _loadCounter();
                           });
                         },
                         child:
@@ -140,14 +132,17 @@ class _HomeState extends State<Home> {
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 ListTile(
-                                  // leading: FlutterLogo(size: 56.0),
                                   title: Text(counters[index].counterName,style: TextStyle(
                                     fontSize: 20.0,
                                     color: Colors.pink[900],
                                     fontWeight: FontWeight.bold,
                                   ),
                                   ),
-                                  subtitle: Text('Count: ' + counters[index].count),
+                                  subtitle: Text('Count: ' + counters[index].count,style: TextStyle(
+                                  fontSize: 15.0,
+                                  color: Colors.pink[900],
+                                  fontWeight: FontWeight.bold,
+                                  ),),
                                   trailing: Icon(Icons.fast_forward_sharp),
                                 ),
                                 Padding(

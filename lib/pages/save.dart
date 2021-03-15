@@ -1,8 +1,6 @@
 import 'dart:convert';
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:my_counter/pages/CounterInfo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'home.dart';
@@ -10,7 +8,6 @@ import 'home.dart';
 class Save extends StatefulWidget {
   @override
   _SaveState createState() => _SaveState();
-
 }
 
 class _SaveState extends State<Save> {
@@ -20,21 +17,6 @@ class _SaveState extends State<Save> {
     // Clean up the controller when the widget is disposed.
     textFieldController.dispose();
     super.dispose();
-  }
-
-  _saveCounter() async {
-    String textToSend = textFieldController.text;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    Map<String, dynamic> map = {
-      'countNumber': "0",
-      'startdate': DateFormat('yyyy-MM-dd – hh:mm').format(DateTime.now()).toString(),
-    };
-
-    prefs.setString(textToSend, json.encode(map));
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Home()),
-    );
   }
 
   @override
@@ -70,18 +52,34 @@ class _SaveState extends State<Save> {
                     ),
                     maxLength: 50,
                   ),
-
                 SizedBox(height: 5.0),
                   Row(
                     children:  [
-                      ElevatedButton.icon(onPressed: () {
-                        _saveCounter();
+                      ElevatedButton.icon(onPressed: () async {
+                        String textToSend = textFieldController.text;
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        Map<String, dynamic> map = {
+                          'countNumber': "0",
+                          'startdate': DateFormat('yyyy-MM-dd – hh:mm').format(DateTime.now()).toString(),
+                        };
+                        if(prefs.containsKey(textToSend))
+                        {
+                          showAlertDialog(context);
+                        }
+                        else {
+                          prefs.setString(textToSend, json.encode(map));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                          );
+                        }
                       },label: Text('Save the Counter'),icon: Icon(
                         Icons.save_sharp,
                       ),
                       style: ElevatedButton.styleFrom(
                         primary: Colors.pink[900],
-                      ),),
+                      ),
+                      ),
                     ],
                   ),
                 ],
@@ -92,4 +90,30 @@ class _SaveState extends State<Save> {
       ),
     );
   }
+  showAlertDialog(BuildContext context) {
+    // set up the button
+    Widget okButton = ElevatedButton(
+      child: Text("OK"),
+      onPressed: () {  Navigator.of(context).pop(); // dismiss dialog
+     },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Save Counter"),
+      content: Text("The Counter Name already exists. Please create new one."),
+      actions: [
+        okButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 }
+
+

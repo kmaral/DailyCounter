@@ -26,18 +26,6 @@ class _UpdateState extends State<Update> {
     textFieldController.text = widget.counterInfoName;
   }
 
-  _updateCounter() async {
-    String textToSend = textFieldController.text;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    var map = json.decode(prefs.get(widget.counterInfoName));
-    prefs.remove(widget.counterInfoName);
-    prefs.setString(textToSend, json.encode(map));
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Home()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,9 +61,24 @@ class _UpdateState extends State<Update> {
                   SizedBox(height: 5.0),
                   Row(
                     children:  [
-                      ElevatedButton.icon(onPressed: () {
-                       _updateCounter();
-                      },label: Text('Save the Counter'),icon: Icon(
+                      ElevatedButton.icon(onPressed: () async{
+                        String textToSend = textFieldController.text;
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        if(prefs.containsKey(textToSend))
+                        {
+                          showAlertDialog(context);
+                        }
+                        else {
+                          var map = json.decode(prefs.get(widget.counterInfoName));
+                          prefs.remove(widget.counterInfoName);
+                          prefs.setString(textToSend, json.encode(map));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+
+                          );
+                        }
+                      },label: Text('Update the Counter'),icon: Icon(
                         Icons.save_sharp,
                       ),
                         style: ElevatedButton.styleFrom(
@@ -90,6 +93,32 @@ class _UpdateState extends State<Update> {
           ),
         ),
       ),
+    );
+  }
+  showAlertDialog(BuildContext context) {
+
+    // set up the button
+    Widget okButton = ElevatedButton(
+      child: Text("OK"),
+      onPressed: () {  Navigator.of(context).pop(); // dismiss dialog
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Update Counter"),
+      content: Text("The Counter Name already exists. Please create new one."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

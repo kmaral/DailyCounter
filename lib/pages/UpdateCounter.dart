@@ -77,8 +77,6 @@ class _UpdateCounterState extends State<UpdateCounter> {
       //prefs.setStringList(widget.counterName, [_counter.toString(), widget.counters.startDate, widget.counters.updatedDate]);
     });
   }
-  _updateCounters(BuildContext context) async{
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +113,7 @@ class _UpdateCounterState extends State<UpdateCounter> {
                         icon: Icon(Icons.settings_applications_sharp),
                         iconSize: 30.0,
                         onPressed: () async{
-                            final result = await Navigator.push(
+                            await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => Update(counterInfoName : counterInfoName)),
