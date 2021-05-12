@@ -26,12 +26,11 @@ class _SaveState extends State<Save> {
       appBar: AppBar(
         title: Text('Add New Counter'),
         centerTitle: true,
-       // automaticallyImplyLeading: false,
+        // automaticallyImplyLeading: false,
         backgroundColor: Colors.blueAccent[200],
         elevation: 0.0,
       ),
-
-      body:  Padding(
+      body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Container(
           child: Column(
@@ -39,7 +38,8 @@ class _SaveState extends State<Save> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Name the Counter',
+                  Text(
+                    'Name the Counter',
                     style: TextStyle(
                       letterSpacing: 2.0,
                       fontWeight: FontWeight.bold,
@@ -47,38 +47,41 @@ class _SaveState extends State<Save> {
                   ),
                   TextField(
                     controller: textFieldController,
-                    decoration: InputDecoration(
-                        labelText: ''
-                    ),
+                    decoration: InputDecoration(labelText: ''),
                     maxLength: 50,
                   ),
-                SizedBox(height: 5.0),
+                  SizedBox(height: 5.0),
                   Row(
-                    children:  [
-                      ElevatedButton.icon(onPressed: () async {
-                        String textToSend = textFieldController.text;
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                        Map<String, dynamic> map = {
-                          'countNumber': "0",
-                          'startdate': DateFormat('yyyy-MM-dd – hh:mm').format(DateTime.now()).toString(),
-                        };
-                        if(prefs.containsKey(textToSend))
-                        {
-                          showAlertDialog(context);
-                        }
-                        else {
-                          prefs.setString(textToSend, json.encode(map));
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => Home()),
-                          );
-                        }
-                      },label: Text('Save the Counter'),icon: Icon(
-                        Icons.save_sharp,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.pink[900],
-                      ),
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () async {
+                          String textToSend = textFieldController.text;
+                          SharedPreferences prefs =
+                              await SharedPreferences.getInstance();
+                          Map<String, dynamic> map = {
+                            'countNumber': "0",
+                            'startdate': DateFormat('yyyy-MM-dd – hh:mm')
+                                .format(DateTime.now())
+                                .toString(),
+                            'interval': "0",
+                          };
+                          if (prefs.containsKey(textToSend)) {
+                            showAlertDialog(context);
+                          } else {
+                            prefs.setString(textToSend, json.encode(map));
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Home()),
+                            );
+                          }
+                        },
+                        label: Text('Save the Counter'),
+                        icon: Icon(
+                          Icons.save_sharp,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.pink[900],
+                        ),
                       ),
                     ],
                   ),
@@ -90,12 +93,14 @@ class _SaveState extends State<Save> {
       ),
     );
   }
+
   showAlertDialog(BuildContext context) {
     // set up the button
     Widget okButton = ElevatedButton(
       child: Text("OK"),
-      onPressed: () {  Navigator.of(context).pop(); // dismiss dialog
-     },
+      onPressed: () {
+        Navigator.of(context).pop(); // dismiss dialog
+      },
     );
 
     // set up the AlertDialog
@@ -115,5 +120,3 @@ class _SaveState extends State<Save> {
     );
   }
 }
-
-

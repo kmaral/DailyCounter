@@ -30,6 +30,7 @@ dependencies:
   flutter_spinkit: "^4.1.2"
   shared_preferences: ^2.0.0
   flutter_launcher_icons: ^0.9.0
+  flutter_local_notifications: ^1.4.4+2
 
 flutter_icons:
   image_path: "images/countdownnew.png"
